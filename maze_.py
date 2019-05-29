@@ -32,7 +32,6 @@ UNIT = 40  # pixels 칸 사이즈
 MAZE_H = total_maze.shape[0]  # grid height 창 높이
 MAZE_W = total_maze.shape[1]  # grid width 창 너비
 
-
 # 미로에 관한 클래스
 class Maze(tk.Tk, object):
     def __init__(self, maze):
@@ -92,7 +91,6 @@ class Maze(tk.Tk, object):
     # def remove_waypoint(self):
     #     self.update()
     #     self.canvas.delete(self.way_point)
-
 
     def changeMap(self, maze):
         self.total_maze = maze

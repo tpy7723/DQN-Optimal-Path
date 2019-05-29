@@ -139,8 +139,6 @@ if __name__ == "__main__":
 
         while True:
             for i in range(len(total_map)):
-                if not confirmResult(total_map[i], env, model):
-                    trainMat(total_map[i], env, model)
-
+                confirmResult(total_map[i], env, model)
                 time.sleep(0.5)
 

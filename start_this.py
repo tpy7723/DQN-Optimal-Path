@@ -6,13 +6,11 @@ import numpy as np
 import Qmaze_
 import maze_
 import qtrain_
-import time
-import datetime
-import image_
+import time, datetime
+# import image_
 
 maze = maze_.total_maze
 env = maze_.env
-
 
 def play_game(model, qmaze, rat_cell):
     global win_counter, lose_counter
@@ -26,15 +24,13 @@ def play_game(model, qmaze, rat_cell):
         # get next action
         q = model.predict(prev_envstate)  # 스테이트를 넣고 q 배열이 나옴
         # print("q: ", q)
-        # print(experience.predict(prev_envstate))
-        # print(valid_actions2)
-        valid_actions2 = qmaze.valid_actions2()
+        # valid_actions2 = qmaze.valid_actions2()
         action = np.argmax(q[0])  # 큰 Q 벨류가 액션
-        arg_n = 2
-        while action not in valid_actions2:
-            print(model.predict(prev_envstate).argsort())
-            action = model.predict(prev_envstate).argsort()[0][arg_n]
-            arg_n = arg_n - 1
+        # arg_n = 2
+        # while action not in valid_actions2:
+        #     print(model.predict(prev_envstate).argsort())
+        #     action = model.predict(prev_envstate).argsort()[0][arg_n]
+        #     arg_n = arg_n - 1
 
         # apply action, get rewards and new state
         env.step(action)  # 액션 취함

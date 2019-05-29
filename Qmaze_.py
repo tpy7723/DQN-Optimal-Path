@@ -114,11 +114,11 @@ class Qmaze(object):
         if rat_row == self.target[0] and rat_col == self.target[1]:  # 목적지 도착 시 리워드
             if self.waypoint_count == self.total_waypoint_size:
                 increment_reward += 5
-                return 100#increment_reward # 6
+                return increment_reward # 6
             else:
                 # return 0
                 # print("다 안밟음")
-                return -100  # lose 조건에 만족
+                return -20  # lose 조건에 만족
 
         if (rat_row, rat_col) in self.visited:  # 방문한 곳은 -0.25 리워드
             # print ("재방문")
@@ -131,13 +131,13 @@ class Qmaze(object):
                 # print("경유지삭제후", self.waypoint)
                 env.waypoint_color_change(rat_row, rat_col)
                 self.waypoint_count += 1
-                increment_reward += 10
+                increment_reward += 5
 
                 self.maze[rat_row, rat_col] = 1.0
 
                 return increment_reward  # 5
             elif (rat_row, rat_col) in self.block_cells:  # 경유지 도착 시 리워드 #pks
-                print("벽 밟았다")
+                # print("벽 밟ㄷ았다")
                 return -20
             else:
                 return -0.4  # - 0.04

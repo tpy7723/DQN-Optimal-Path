@@ -31,7 +31,6 @@ class Experience(object):
 
         if len(self.memory) > self.max_memory: # 메모리가 최대 메모리보다 클 경우
             del self.memory[0] # 리스트의 첫번 째 칸을 지움  the oldest episode is deleted
-            # print("삭제")
 
     # 예측
     def predict(self, envstate): # 로봇의 위치와 맵을 한줄로 나타낸 배열을 인풋으로 사용
@@ -43,20 +42,20 @@ class Experience(object):
 
     def get_data(self, data_size=10):
         env_size = self.memory[0][0].shape[1]  # envstate 1d size (1st element of episode) 한줄로 된 맵 어레이 원소 개수
-        mem_size = len(self.memory) # 메모리 사이즈 19200
-        data_size = min(mem_size, data_size) # 최대 사이즈는 data_size가 될 것 32
+        mem_size = len(self.memory) # 메모리 사이즈
+        data_size = min(mem_size, data_size) # 최대 사이즈는 data_size가 될 것
 
         inputs = np.zeros((data_size, env_size))
         # print(inputs)
         targets = np.zeros((data_size, self.num_actions))
 
-                                                # 19200           32
-        for i, j in enumerate(np.random.choice(range(mem_size), data_size, replace=False)): # [3,1, 4, 7,12, --- ,11]
+
+        for i, j in enumerate(np.random.choice(range(mem_size), data_size, replace=False)):
             envstate, action, reward, envstate_next, game_over = self.memory[j]  # 메모리에서 에피소드를 꺼냄
             inputs[i] = envstate # 데이터 사이즈 만큼 상태들을 저장함
 
             # There should be no target values for actions not taken.
-            targets[i] = self.predict(envstate) # 현재 스테이트에서의 액션 벨류
+            targets[i] = self.predict(envstate) # 현재 스테이트의 벨류
             Q_sa = np.max(self.predict(envstate_next)) # 다음 스테이트에서의 최대 벨류
             if game_over: # 게임이 끝나면
                 targets[i, action] = reward # 현재 리워드를 넣음
