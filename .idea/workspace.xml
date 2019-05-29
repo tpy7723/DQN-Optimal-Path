@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa3da8e8-1aa0-40a5-907d-a3db0eeee4cc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Qmaze_.py" beforeDir="false" afterPath="$PROJECT_DIR$/Qmaze_.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experience_memory.p" beforeDir="false" afterPath="$PROJECT_DIR$/experience_memory.p" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img0514.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/img0514.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.h5" beforeDir="false" afterPath="$PROJECT_DIR$/model.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.json" beforeDir="false" afterPath="$PROJECT_DIR$/model.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/qtrain_.py" beforeDir="false" afterPath="$PROJECT_DIR$/qtrain_.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/start_this.py" beforeDir="false" afterPath="$PROJECT_DIR$/start_this.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/트레이닝맵.txt" beforeDir="false" afterPath="$PROJECT_DIR$/트레이닝맵.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,7 +23,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/experience_.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
+            <state relative-caret-position="-356">
               <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
               <folding>
                 <element signature="e#24#42#0" expanded="true" />
@@ -28,8 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/image_.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
+            <state relative-caret-position="559">
+              <caret line="85" column="25" selection-start-line="85" selection-start-column="25" selection-end-line="85" selection-end-column="25" />
               <folding>
                 <element signature="e#25#41#0" expanded="true" />
               </folding>
@@ -38,22 +45,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/start_this.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="121" selection-start-line="121" selection-end-line="121" />
-              <folding>
-                <element signature="e#25#62#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/트레이닝맵.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-16972">
-              <caret line="331" column="7" selection-start-line="331" selection-start-column="7" selection-end-line="331" selection-end-column="7" />
+            <state relative-caret-position="9037">
+              <caret line="460" column="7" selection-start-line="460" selection-start-column="7" selection-end-line="460" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -61,8 +56,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maze_.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="14" selection-start-line="14" selection-end-line="22" selection-end-column="2" />
+            <state relative-caret-position="47">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
               <folding>
                 <element signature="e#25#35#0" expanded="true" />
               </folding>
@@ -73,10 +68,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Qmaze_.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="32" column="103" selection-start-line="32" selection-start-column="103" selection-end-line="32" selection-end-column="103" />
+            <state relative-caret-position="357">
+              <caret line="133" column="38" selection-start-line="133" selection-start-column="38" selection-end-line="133" selection-end-column="38" />
               <folding>
                 <element signature="e#24#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/start_this.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="40">
+              <caret line="131" column="23" lean-forward="true" selection-start-line="131" selection-start-column="23" selection-end-line="131" selection-end-column="23" />
+              <folding>
+                <element signature="e#25#62#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -85,8 +92,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/qtrain_.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="173" column="29" selection-start-line="173" selection-start-column="29" selection-end-line="173" selection-end-column="29" />
+            <state relative-caret-position="697">
+              <caret line="181" column="33" lean-forward="true" selection-start-line="181" selection-start-column="33" selection-end-line="181" selection-end-column="33" />
               <folding>
                 <element signature="e#26#44#0" expanded="true" />
               </folding>
@@ -98,8 +105,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>처음</find>
-      <find>experience</find>
       <find>개수</find>
       <find>max_memory</find>
       <find>total_maze</find>
@@ -117,17 +122,19 @@
       <find>메모리 길이</find>
       <find>date</find>
       <find>19200</find>
-      <find>길이</find>
       <find>재방문</find>
       <find>myMaze</find>
       <find>cv</find>
       <find>total_reward</find>
       <find>max_mem</find>
-      <find>print</find>
       <find>env</find>
       <find>1.5</find>
-      <find>epsilon</find>
       <find>image_</find>
+      <find>epsilon</find>
+      <find>길이</find>
+      <find>load</find>
+      <find>print</find>
+      <find>벽</find>
     </findStrings>
     <replaceStrings>
       <replace>increment_reward</replace>
@@ -144,20 +151,20 @@
         <option value="$PROJECT_DIR$/../../maze_주석/maze.py" />
         <option value="$PROJECT_DIR$/maze_다양한맵학습_100%/start_this.py" />
         <option value="$PROJECT_DIR$/experience_memory.txt" />
-        <option value="$PROJECT_DIR$/Qmaze_.py" />
-        <option value="$PROJECT_DIR$/image_.py" />
         <option value="$PROJECT_DIR$/maze_.py" />
         <option value="$PROJECT_DIR$/experience_.py" />
         <option value="$PROJECT_DIR$/maze_다양한맵학습_100%/qtrain_.py" />
+        <option value="$PROJECT_DIR$/트레이닝맵.txt" />
+        <option value="$PROJECT_DIR$/image_.py" />
+        <option value="$PROJECT_DIR$/Qmaze_.py" />
         <option value="$PROJECT_DIR$/start_this.py" />
         <option value="$PROJECT_DIR$/qtrain_.py" />
-        <option value="$PROJECT_DIR$/트레이닝맵.txt" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="554" />
-    <option name="y" value="-8" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="441" />
+    <option name="y" value="542" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
   </component>
@@ -240,10 +247,11 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="441" y="542" width="974" height="1047" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.13645943" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.2767094" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="0" weight="0.32936078" />
       <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.5021075" side_tool="true" weight="0.37486458" />
@@ -251,7 +259,7 @@
       <window_info anchor="bottom" id="Message" order="3" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="5" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" sideWeight="0.49789253" visible="true" weight="0.3340564" />
+      <window_info anchor="bottom" id="Run" order="6" sideWeight="0.49789253" visible="true" weight="0.33734939" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.45612136" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
@@ -387,40 +395,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experience_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-          <folding>
-            <element signature="e#24#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/image_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
-          <folding>
-            <element signature="e#25#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maze_.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="14" selection-start-line="14" selection-end-line="22" selection-end-column="2" />
+        <state relative-caret-position="47">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
           <folding>
             <element signature="e#25#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Qmaze_.py">
+    <entry file="file://$PROJECT_DIR$/experience_.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="32" column="103" selection-start-line="32" selection-start-column="103" selection-end-line="32" selection-end-column="103" />
+        <state relative-caret-position="-356">
+          <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
           <folding>
             <element signature="e#24#42#0" expanded="true" />
           </folding>
@@ -429,28 +417,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/qtrain_.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="173" column="29" selection-start-line="173" selection-start-column="29" selection-end-line="173" selection-end-column="29" />
+        <state relative-caret-position="697">
+          <caret line="181" column="33" lean-forward="true" selection-start-line="181" selection-start-column="33" selection-end-line="181" selection-end-column="33" />
           <folding>
             <element signature="e#26#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/start_this.py">
+    <entry file="file://$PROJECT_DIR$/image_.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="121" selection-start-line="121" selection-end-line="121" />
+        <state relative-caret-position="559">
+          <caret line="85" column="25" selection-start-line="85" selection-start-column="25" selection-end-line="85" selection-end-column="25" />
           <folding>
-            <element signature="e#25#62#0" expanded="true" />
+            <element signature="e#25#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/트레이닝맵.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-16972">
-          <caret line="331" column="7" selection-start-line="331" selection-start-column="7" selection-end-line="331" selection-end-column="7" />
+        <state relative-caret-position="9037">
+          <caret line="460" column="7" selection-start-line="460" selection-start-column="7" selection-end-line="460" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Qmaze_.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="133" column="38" selection-start-line="133" selection-start-column="38" selection-end-line="133" selection-end-column="38" />
+          <folding>
+            <element signature="e#24#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/start_this.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="131" column="23" lean-forward="true" selection-start-line="131" selection-start-column="23" selection-end-line="131" selection-end-column="23" />
+          <folding>
+            <element signature="e#25#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

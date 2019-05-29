@@ -8,7 +8,7 @@ import maze_
 import qtrain_
 import time
 import datetime
-#import image_
+import image_
 
 maze = maze_.total_maze
 env = maze_.env
@@ -26,13 +26,21 @@ def play_game(model, qmaze, rat_cell):
         # get next action
         q = model.predict(prev_envstate)  # 스테이트를 넣고 q 배열이 나옴
         # print("q: ", q)
+        # print(experience.predict(prev_envstate))
+        # print(valid_actions2)
+        valid_actions2 = qmaze.valid_actions2()
         action = np.argmax(q[0])  # 큰 Q 벨류가 액션
+        arg_n = 2
+        while action not in valid_actions2:
+            print(model.predict(prev_envstate).argsort())
+            action = model.predict(prev_envstate).argsort()[0][arg_n]
+            arg_n = arg_n - 1
 
         # apply action, get rewards and new state
         env.step(action)  # 액션 취함
         env.render()
 
-        #time.sleep(0.1)
+        # time.sleep(0.1)
 
         envstate, reward, game_status = qmaze.act(action)
 
@@ -162,33 +170,33 @@ if __name__ == "__main__":
 
     elif (a == '3'):
         # 0은 까만 벽 1은 하얀 벽 2는 경유지 3은 목적지 4는 로봇
-        total_maze = np.array([
-            [1., 1., 1., 1.],
-            [0., 0., 2., 2.],
-            [2., 2., 2., 1.],
-            [1., 1., 0., 0.],
-            [2., 2., 1., 1.],
-            [1., 1., 2., 3.]
-        ])
+        # total_maze = np.array([
+        #     [1., 1., 1., 1.],
+        #     [0., 0., 2., 2.],
+        #     [2., 2., 2., 1.],
+        #     [1., 1., 0., 0.],
+        #     [2., 2., 1., 1.],
+        #     [1., 1., 2., 3.]
+        # ])
 
-        trainMat(total_maze, env, model)
+        trainMat(image_.myMaze, env, model)
         qtrain_.experience.save()
 
     elif (a == '4'):
         model.load_weights('model.h5')  # 트레인 데이터를 불러옴
 
         # 0은 까만 벽 1은 하얀 벽 2는 경유지 3은 목적지 4는 로봇
-        total_maze = np.array([
-            [1., 1., 1., 1.],
-            [0., 0., 2., 2.],
-            [2., 2., 2., 1.],
-            [1., 1., 0., 0.],
-            [2., 2., 1., 1.],
-            [1., 1., 2., 3.]
-        ])
+        # total_maze = np.array([
+        #     [1., 1., 1., 1.],
+        #     [0., 0., 2., 2.],
+        #     [2., 2., 2., 1.],
+        #     [1., 1., 0., 0.],
+        #     [2., 2., 1., 1.],
+        #     [1., 1., 2., 3.]
+        # ])
 
         while True:
-            confirmResult(total_maze, env, model)
+            confirmResult(image_.myMaze, env, model)
 
     end_time = datetime.datetime.now()
     dt = end_time - start_time  # 시간 차이

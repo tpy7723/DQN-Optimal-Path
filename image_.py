@@ -85,7 +85,7 @@ for col in range(6):
             myMaze[col][row] = 0
         elif avg_R > 150 and avg_G > 150 and avg_B > 150:
             myMaze[col][row] = 1
-        elif avg_B > 120 and avg_R < 100 and avg_G < 130:
+        elif avg_B > 150 and avg_R < 130 and avg_G < 180:
             myMaze[col][row] = 3
 
         i += math.floor(image.shape[1]/4)
