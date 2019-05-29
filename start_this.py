@@ -130,7 +130,6 @@ if __name__ == "__main__":
 
     # Load the model from disk
     model = qtrain_.build_model(maze)
-    print("hi")
     if (a == '0'):
         for i in range(len(total_map)):
             trainMat_new(total_map[i], env, model)
@@ -158,7 +157,7 @@ if __name__ == "__main__":
                 lose += 1
                 # trainMat(total_map[i], env, model)
                 # model.load_weights('model.h5')  # 트레인 데이터를 불러옴
-            time.sleep(0.5)
+            # time.sleep(0.5)
         print("성공 갯수: %d, 실패 갯수: %d" % (win, lose))
 
     elif (a == '3'):
