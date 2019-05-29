@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     # Load the model from disk
     model = qtrain_.build_model(maze)
-
+    print("hi")
     if (a == '0'):
         for i in range(len(total_map)):
             trainMat_new(total_map[i], env, model)
