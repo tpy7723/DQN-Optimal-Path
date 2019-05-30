@@ -109,11 +109,11 @@ class Qmaze(object):
         nrows, ncols = self.maze.shape  # 맵 가로 세로 사이즈
 
         global increment_reward
-        increment_reward = 0
+        increment_reward = 10
 
         if rat_row == self.target[0] and rat_col == self.target[1]:  # 목적지 도착 시 리워드
             if self.waypoint_count == self.total_waypoint_size:
-                increment_reward += 5
+                increment_reward += 50
                 return increment_reward # 6
             else:
                 # return 0
@@ -121,8 +121,8 @@ class Qmaze(object):
                 return -20  # lose 조건에 만족
 
         if (rat_row, rat_col) in self.visited:  # 방문한 곳은 -0.25 리워드
-            # print ("재방문")
-            return -5
+            print ("재방문")
+            return -10
 
         if mode == 'valid':  # 유효한 곳은 -0.04 리워드
             if (rat_row, rat_col) in self.waypoint:  # 경유지 도착 시 리워드 #pks
@@ -137,7 +137,7 @@ class Qmaze(object):
 
                 return increment_reward  # 5
             elif (rat_row, rat_col) in self.block_cells:  # 경유지 도착 시 리워드 #pks
-                # print("벽 밟ㄷ았다")
+                print("벽 밟ㄷ았다")
                 return -20
             else:
                 return -0.4  # - 0.04
@@ -220,19 +220,6 @@ class Qmaze(object):
             actions.remove(0)  # left 삭제
         elif col == ncols - 1:  # 맨 오른쪽에 있을 때
             actions.remove(2)  # right 삭제
-
-        # if row > 0 and self.maze[row - 1, col] == 0.0:  # 맨 위쪽이 아니고 윗 칸이 막혀있을 때
-        #     actions.remove(1)  # up 삭제
-        #
-        # if row < nrows - 1 and self.maze[row + 1, col] == 0.0:  # 맨 아래쪽이 아니고 아래 칸이 막혀있을 때
-        #     actions.remove(3)  # down 삭제
-        #
-        # if col > 0 and self.maze[row, col - 1] == 0.0:  # 맨 왼쪽이 아니고 왼쪽 칸이 막혀있을 때
-        #     actions.remove(0)  # left 삭제
-        #
-        # if col < ncols - 1 and self.maze[row, col + 1] == 0.0:  # 맨 오른쪽이 아니고 오른쪽 칸이 막혀있을 때
-        #     actions.remove(2)  # right 삭제
-
         return actions  # 가능한 액션 배열
 
     # 가능한 액션들만 보여줌

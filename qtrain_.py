@@ -40,11 +40,11 @@ y_ = []
 # 맵에 대해 모델 생성하는 함수
 def build_model(maze):
     model = Sequential()  # 모델 생성 ann
-    model.add(Dense(maze.size, input_shape=(maze.size,)))  # input , 1st hidden
+    model.add(Dense(maze.size *3, input_shape=(maze.size,)))  # input , 1st hidden
     model.add(PReLU())  # activation function
-    model.add(Dense(maze.size))  # 2nd hidden
+    model.add(Dense(maze.size*2))  # 2nd hidden
     model.add(PReLU())  # activation function
-    model.add(Dense(maze.size))  # 2nd hidden
+    model.add(Dense(maze.size * 1))  # 2nd hidden
     model.add(PReLU())  # activation function
     model.add(Dense(num_actions))  # output
     model.compile(optimizer='adam', loss='mse')
@@ -56,7 +56,8 @@ temp_model = build_model(maze_.total_maze)
 
 # # Initialize experience replay object
 # experience = experience_.Experience(temp_model, max_memory=max_memory)
-experience = experience_.Experience(temp_model, max_memory=2000)
+
+experience = experience_.Experience(temp_model, max_memory=1920)
 experience_exist = 0
 
 def qtrain(model, maze, **opt):
@@ -91,9 +92,11 @@ def qtrain(model, maze, **opt):
 
     qmaze = Qmaze_.Qmaze(maze)
 
+    # experience = experience_.Experience(model, max_memory=max_memory)
     # # Initialize experience replay object
     if experience_exist == 0:
-        experience = experience_.Experience(model, max_memory=max_memory)
+        experience = experience_.Experience(model, max_memory=1920)
+        experience.load()
         experience_exist = 1
 
     win_history = []  # history of win/lose game
@@ -123,11 +126,12 @@ def qtrain(model, maze, **opt):
 
             valid_actions = qmaze.valid_actions()  # 가능한 액션을 얻는다
             valid_actions2 = qmaze.valid_actions2()  # 가능한 액션을 얻는다
+
             if not valid_actions: break  # 가능한 액션이 없으면 break
             prev_envstate = envstate  # 이전 스테이트에 현재 스테이트를 넣음
             # print("가능한 액션 ", valid_actions)
-            # print(envstate)
-
+            print(envstate)
+            print(experience.predict(prev_envstate))
             # Get next action
             if np.random.rand() < epsilon:  # 입실론 보다 작으면
                 action = random.choice(valid_actions2)  # 탐험  여기수정해야겟다***********
@@ -137,7 +141,7 @@ def qtrain(model, maze, **opt):
                 # print(experience.predict(prev_envstate))
                 # print(valid_actions2)
                 # arg_n = 2
-                # while action not in valid_actions:
+                # while action not in valid_actions2:
                 #     action = experience.predict(prev_envstate).argsort()[arg_n]
                 #     arg_n = arg_n - 1
 
@@ -165,7 +169,8 @@ def qtrain(model, maze, **opt):
             n_episodes += 1  # 에피소드 카운트
 
             # Train neural network model
-            inputs, targets = experience.get_data(data_size=16)  # 타겟은 예측값
+            # print("학습")
+            inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
             h = model.fit(
                 inputs,
                 targets,
@@ -206,17 +211,17 @@ def qtrain(model, maze, **opt):
         # cases the agent won
 
         if win_rate >= 0.875:
-            temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.005  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.750:
-            temp_epsilon = 0.03  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.625:
-            temp_epsilon = 0.06  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.015  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.500:
-            temp_epsilon = 0.07  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.02  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.375:
-            temp_epsilon = 0.08  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.04  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.250:
-            temp_epsilon = 0.09  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.06  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.125:
             temp_epsilon = 0.1  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.000:
@@ -225,11 +230,14 @@ def qtrain(model, maze, **opt):
         if epsilon > temp_epsilon:
             epsilon = temp_epsilon
 
+        if sum(win_history[-hsize:]) == 0:
+            epsilon = 0.1
+
         env.countEpsilon(epsilon)
         # print("epsilon = ", epsilon)
         # and completion_check(model, qmaze)
 
-        if sum(win_history[-hsize:]) >= hsize:  # 모든 셀에 대해 검사
+        if sum(win_history[-hsize:]) >= hsize and completion_check(model, maze):  # 모든 셀에 대해 검사
             print("Reached 100%% win rate at epoch: %d" % (epoch,))
             break
 
@@ -292,7 +300,7 @@ def qtrain(model, maze, **opt):
     # f3 = open("C:/Users/pks01/Desktop/졸프/y_축.txt", 'w')
     # # f3.write("[")
     # for i in range(0, len(y_)):
-    #     data = str(y_[i])
+    #     data = str(y_[i])l
     #     f3.write(data)
     #     if i != len(y_)-1:
     #         f3.write(",")
@@ -302,7 +310,7 @@ def qtrain(model, maze, **opt):
     return seconds
 
 
-def completion_check(model, qmaze):
+def completion_check(model, maze):
     # for cell in qmaze.free_cells:
     #
     #     if not qmaze.valid_actions(cell): # 가능한 길이 없으면 false
@@ -312,12 +320,10 @@ def completion_check(model, qmaze):
     #         return False
     cell = (0, 0)
 
-    if not qmaze.valid_actions(cell):  # 가능한 길이 없으면 false
+    if start_this.confirmResult(maze, env, model):
+        return True
+    else:
         return False
-    if not start_this.play_game(model, qmaze, cell):  # 모든 셀에 대하여 갈 곳이 없으면
-        return False
-
-    return True
 
 
 # 시간 형식 지정

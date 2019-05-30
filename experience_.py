@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import pickle
+from random import *
 
 # 경험 기록
 class Experience(object):
@@ -30,7 +31,7 @@ class Experience(object):
         self.memory.append(episode) # 에피소드에 추가
 
         if len(self.memory) > self.max_memory: # 메모리가 최대 메모리보다 클 경우
-            del self.memory[0] # 리스트의 첫번 째 칸을 지움  the oldest episode is deleted
+            del self.memory[randint(0,len(self.memory)-1)] # 리스트의 첫번 째 칸을 지움  the oldest episode is deleted
 
     # 예측
     def predict(self, envstate): # 로봇의 위치와 맵을 한줄로 나타낸 배열을 인풋으로 사용

@@ -24,19 +24,21 @@ def play_game(model, qmaze, rat_cell):
         # get next action
         q = model.predict(prev_envstate)  # 스테이트를 넣고 q 배열이 나옴
         # print("q: ", q)
-        # valid_actions2 = qmaze.valid_actions2()
+
         action = np.argmax(q[0])  # 큰 Q 벨류가 액션
-        # arg_n = 2
-        # while action not in valid_actions2:
-        #     print(model.predict(prev_envstate).argsort())
-        #     action = model.predict(prev_envstate).argsort()[0][arg_n]
-        #     arg_n = arg_n - 1
+
+        valid_actions2 = qmaze.valid_actions2()
+        arg_n = 2
+        while action not in valid_actions2:
+            #print(model.predict(prev_envstate).argsort())
+            action = model.predict(prev_envstate).argsort()[0][arg_n]
+            arg_n = arg_n - 1
 
         # apply action, get rewards and new state
         env.step(action)  # 액션 취함
         env.render()
 
-        # time.sleep(0.1)
+        time.sleep(0.1)
 
         envstate, reward, game_status = qmaze.act(action)
 
@@ -60,7 +62,7 @@ def trainMat(maze, env, model):
     env.changeMap(temp)
 
     # 기존 것에 더 학습
-    qtrain_.qtrain(model, temp, epochs=1000, max_memory=800 * maze.size, data_size=32, weights_file="model.h5")
+    qtrain_.qtrain(model, temp, epochs=1000, max_memory=80 * maze.size, data_size=32, weights_file="model.h5")
     model.save('model.h5')
     env.countWin(0)
     env.countLose(0)
@@ -75,7 +77,7 @@ def trainMat_new(maze, env, model):
     env.changeMap(temp)
 
     # 기존 것에 더 학습
-    qtrain_.qtrain(model, temp, epochs=1000, max_memory=800 * maze.size, data_size=32)
+    qtrain_.qtrain(model, temp, epochs=1000, max_memory=80* maze.size, data_size=32)
     model.save('model.h5')
     env.countWin(0)
     env.countLose(0)
@@ -88,18 +90,26 @@ def confirmResult(maze, env, model):
     temp = maze
 
     env.changeMap(temp)
+    env.reset()
 
     env.countWin(0)
     env.countLose(0)
     win_counter = 0
     lose_counter = 0
-    if play_game(model, Qmaze_.Qmaze(temp), (0, 0)):  # 0의 위치에서 게임 시작
-        env.reset()
+    # for i in range(len(Qmaze_.Qmaze(maze).free_cells)):
+    #     env.reset_location(Qmaze_.Qmaze(maze).free_cells[i])
+    #     if play_game(model, Qmaze_.Qmaze(temp), Qmaze_.Qmaze(maze).free_cells[i]):  # 0의 위치에서 게임 시작
+    #         env.reset()
+    #         # return True
+    #     else:
+    #         env.reset()
+    #         # return False
+    if play_game(model, Qmaze_.Qmaze(temp), (0,0)):  # 0의 위치에서 게임 시작
+        # env.reset()
         return True
     else:
-        env.reset()
+        # env.reset()
         return False
-
 
 if __name__ == "__main__":
     print("0: 새로 학습 1: 기존 것에 학습 2: 학습 결과 보기 3: 특정 맵 학습 하기 4: 특정 맵 결과 보기")
@@ -140,7 +150,9 @@ if __name__ == "__main__":
         qtrain_.experience.save()
 
     elif (a == '1'):
-        for j in range(1):  # 반복횟수
+        # trainMat(total_map[6], env, model)
+        # trainMat(total_map[5], env, model)
+        for j in range(3):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j+1, i+1)
                 trainMat(total_map[i], env, model)
