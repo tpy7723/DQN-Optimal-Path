@@ -38,7 +38,7 @@ def play_game(model, qmaze, rat_cell):
         env.step(action)  # 액션 취함
         env.render()
 
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
         envstate, reward, game_status = qmaze.act(action)
 

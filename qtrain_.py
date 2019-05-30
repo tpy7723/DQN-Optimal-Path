@@ -95,7 +95,7 @@ def qtrain(model, maze, **opt):
     # experience = experience_.Experience(model, max_memory=max_memory)
     # # Initialize experience replay object
     if experience_exist == 0:
-        experience = experience_.Experience(model, max_memory=1920)
+        experience = experience_.Experience(model, max_memory=192000)
         experience.load()
         experience_exist = 1
 
