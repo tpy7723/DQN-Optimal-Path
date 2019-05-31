@@ -364,15 +364,15 @@ def my_train():
         loss = temp_model.evaluate(inputs, targets, verbose=0)
         print("loss: ", loss)
 
+        # Save trained model weights and architecture, this will be used by the visualization code
+        h5file = "model" + ".h5"
+        json_file = "model" + ".json"
+        temp_model.save_weights(h5file, overwrite=True)
+
+        with open(json_file, "w") as outfile:
+            json.dump(temp_model.to_json(), outfile)
+
     # X : 입력 데이터
     # Y : 결과(Label 값) 데이터
     # epochs : 학습 데이터 반복 횟수
     # batch_size : 한 번에 학습할 때 사용하는 데이터 개수
-
-    # Save trained model weights and architecture, this will be used by the visualization code
-    h5file = "model" + ".h5"
-    json_file = "model" + ".json"
-    temp_model.save_weights(h5file, overwrite=True)
-
-    with open(json_file, "w") as outfile:
-        json.dump(temp_model.to_json(), outfile)
