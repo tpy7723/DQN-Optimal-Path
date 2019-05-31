@@ -152,7 +152,7 @@ if __name__ == "__main__":
     elif (a == '1'):
         # trainMat(total_map[6], env, model)
         # trainMat(total_map[5], env, model)
-        for j in range(3):  # 반복횟수
+        for j in range(1):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j+1, i+1)
                 trainMat(total_map[i], env, model)
@@ -205,6 +205,8 @@ if __name__ == "__main__":
 
         while True:
             confirmResult(image_.myMaze, env, model)
+    elif (a == '5'):
+        qtrain_.my_train()
 
     end_time = datetime.datetime.now()
     dt = end_time - start_time  # 시간 차이

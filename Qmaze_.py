@@ -121,7 +121,7 @@ class Qmaze(object):
                 return -20  # lose 조건에 만족
 
         if (rat_row, rat_col) in self.visited:  # 방문한 곳은 -0.25 리워드
-            print ("재방문")
+            # print ("재방문")
             return -10
 
         if mode == 'valid':  # 유효한 곳은 -0.04 리워드

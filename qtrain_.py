@@ -130,8 +130,8 @@ def qtrain(model, maze, **opt):
             if not valid_actions: break  # 가능한 액션이 없으면 break
             prev_envstate = envstate  # 이전 스테이트에 현재 스테이트를 넣음
             # print("가능한 액션 ", valid_actions)
-            print(envstate)
-            print(experience.predict(prev_envstate))
+            # print(envstate)
+            # print(experience.predict(prev_envstate))
             # Get next action
             if np.random.rand() < epsilon:  # 입실론 보다 작으면
                 action = random.choice(valid_actions2)  # 탐험  여기수정해야겟다***********
@@ -170,13 +170,13 @@ def qtrain(model, maze, **opt):
 
             # Train neural network model
             # print("학습")
-            inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
+            inputs, targets = experience.get_data(data_size=8)  # 타겟은 예측값
             h = model.fit(
                 inputs,
                 targets,
-                epochs=8,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
+                epochs=4,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
                 # 하지만, 너무 많이 했을 경우 모델의 가중치가 학습 데이터에 지나치게 최적화되는 과적합(Overfitting) 현상이 발생합니다.
-                batch_size=16,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
+                batch_size=8,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
                 # batch_size 값이 크면 클수록 여러 데이터를 기억하고 있어야 하기에 메모리가 커야 합니다. 그대신 학습 시간이 빨라집니다.
                 # batch_size 값이 작으면 학습은 꼼꼼하게 이루어질 수 있지만 학습 시간이 많이 걸립니다.
                 verbose=0,  # Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
@@ -337,3 +337,42 @@ def format_time(seconds):
     else:
         h = seconds / 3600.0
         return "%.2f hours" % (h,)
+
+def my_train():
+    # Load the model from disk
+    temp_model = build_model(maze_.total_maze)
+    temp_model.load_weights("model.h5")
+
+    experience = experience_.Experience(temp_model, max_memory=192000)
+    experience.load()
+
+
+
+    for i in range(5):
+        inputs, targets = experience.get_data(data_size=192000)  # 타겟은 예측값
+
+        h = temp_model.fit(
+            inputs,
+            targets,
+            epochs=1,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
+            # 하지만, 너무 많이 했을 경우 모델의 가중치가 학습 데이터에 지나치게 최적화되는 과적합(Overfitting) 현상이 발생합니다.
+            batch_size=4800,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
+            # batch_size 값이 크면 클수록 여러 데이터를 기억하고 있어야 하기에 메모리가 커야 합니다. 그대신 학습 시간이 빨라집니다.
+            # batch_size 값이 작으면 학습은 꼼꼼하게 이루어질 수 있지만 학습 시간이 많이 걸립니다.
+            verbose=0,  # Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
+        )
+        loss = temp_model.evaluate(inputs, targets, verbose=0)
+        print("loss: ", loss)
+
+    # X : 입력 데이터
+    # Y : 결과(Label 값) 데이터
+    # epochs : 학습 데이터 반복 횟수
+    # batch_size : 한 번에 학습할 때 사용하는 데이터 개수
+
+    # Save trained model weights and architecture, this will be used by the visualization code
+    h5file = "model" + ".h5"
+    json_file = "model" + ".json"
+    temp_model.save_weights(h5file, overwrite=True)
+
+    with open(json_file, "w") as outfile:
+        json.dump(temp_model.to_json(), outfile)
