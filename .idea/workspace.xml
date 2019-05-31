@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa3da8e8-1aa0-40a5-907d-a3db0eeee4cc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Qmaze_.py" beforeDir="false" afterPath="$PROJECT_DIR$/Qmaze_.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experience_memory.p" beforeDir="false" afterPath="$PROJECT_DIR$/experience_memory.p" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.h5" beforeDir="false" afterPath="$PROJECT_DIR$/model.h5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.json" beforeDir="false" afterPath="$PROJECT_DIR$/model.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/qtrain_.py" beforeDir="false" afterPath="$PROJECT_DIR$/qtrain_.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/start_this.py" beforeDir="false" afterPath="$PROJECT_DIR$/start_this.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,8 +86,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/qtrain_.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="356" column="20" selection-start-line="356" selection-start-column="20" selection-end-line="356" selection-end-column="20" />
+            <state relative-caret-position="369">
+              <caret line="365" lean-forward="true" selection-start-line="365" selection-end-line="365" />
               <folding>
                 <element signature="e#25#43#0" expanded="true" />
               </folding>
@@ -178,9 +174,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="478" />
-    <option name="y" value="-18" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="864" />
+    <option name="y" value="39" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
   </component>
@@ -497,8 +493,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/qtrain_.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="356" column="20" selection-start-line="356" selection-start-column="20" selection-end-line="356" selection-end-column="20" />
+        <state relative-caret-position="369">
+          <caret line="365" lean-forward="true" selection-start-line="365" selection-end-line="365" />
           <folding>
             <element signature="e#25#43#0" expanded="true" />
           </folding>
