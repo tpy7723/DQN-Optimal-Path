@@ -17,6 +17,9 @@ class Experience(object):
         self.memory = list() # 에피소드를 보관할 리스트
         self.num_actions = model.output_shape[-1]
 
+    def getsize(self):
+        return len(self.memory)
+
     def save(self):
         with open('experience_memory.p','wb') as file:
             pickle.dump(self.memory, file)

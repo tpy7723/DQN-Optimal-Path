@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-\
 import numpy as np
 import keras.backend.tensorflow_backend as KK
-from keras.layers.core import Dense
+from keras.layers.core import Dense, Dropout
 from keras.models import Sequential, load_model
 from keras.layers.advanced_activations import PReLU
 import datetime, random, json
@@ -42,10 +42,13 @@ def build_model(maze):
     model = Sequential()  # 모델 생성 ann
     model.add(Dense(maze.size *3, input_shape=(maze.size,)))  # input , 1st hidden
     model.add(PReLU())  # activation function
-    model.add(Dense(maze.size*2))  # 2nd hidden
+    model.add(Dropout(0.2))
+    model.add(Dense(maze.size*3))  # 2nd hidden
     model.add(PReLU())  # activation function
-    model.add(Dense(maze.size * 1))  # 2nd hidden
+    model.add(Dropout(0.2))
+    model.add(Dense(maze.size * 3))  # 2nd hidden
     model.add(PReLU())  # activation function
+    model.add(Dropout(0.2))
     model.add(Dense(num_actions))  # output
     model.compile(optimizer='adam', loss='mse')
 
@@ -62,20 +65,16 @@ experience_exist = 0
 
 def qtrain(model, maze, **opt):
     global epsilon, max_epoch, temp_epsilon, experience, experience_exist
-    start_this.env.reset()
+    # start_this.env.reset() # 로봇 경유지 리셋
     # print("답",maze)
     # env = maze_.Maze(maze)
     # env.reset()
-
-
-
     epsilon = 0.15
     counter = 0
+
     n_epoch = opt.get('epochs', 15000)  # 15000 epoch 횟수
     max_memory = opt.get('max_memory', 1000)  # 128
-
     data_size = opt.get('data_size', 50)  # 32
-
     weights_file = opt.get('weights_file', "")
     name = opt.get('name', 'model')  # model
 
@@ -109,30 +108,27 @@ def qtrain(model, maze, **opt):
         total_reward = 0
 
         loss = 0.0  # loss 0으로 초기화
-        rat_cell = random.choice(qmaze.free_cells)  # 랜덤위치에서 시작
-        qmaze.reset((0, 0))  # start 스테이트로 바꾸고 랜덤위치에서 로봇 생성 후 배열에 적용
-        game_over = False  # game_over X
 
-        # get initial envstate (1d flattened canvas)
+        # qmaze.reset(qmaze.initialrat)  # start 스테이트로 바꾸고 랜덤위치에서 로봇 생성 후 배열에 적용
+        # print(qmaze.initialrat)
+        game_over = False  # game_over X
 
         qmaze = Qmaze_.Qmaze(maze)
         envstate = qmaze.observe()  # 초기 상태 어레이를 한 줄로 표현
 
         n_episodes = 0  # 에피소드 초기화
-
-        start_this.env.reset_location((0, 0))  # rat cell
+        start_this.env.changeMap(maze)  # 맵 초기화: 로봇 경유지
 
         while not game_over:  # 게임이 끝날 때 까지
 
             valid_actions = qmaze.valid_actions()  # 가능한 액션을 얻는다
-            valid_actions2 = qmaze.valid_actions2()  # 가능한 액션을 얻는다
+            valid_actions2 = qmaze.valid_actions2()  # 벽 미포함 액션
 
             if not valid_actions: break  # 가능한 액션이 없으면 break
             prev_envstate = envstate  # 이전 스테이트에 현재 스테이트를 넣음
             # print("가능한 액션 ", valid_actions)
             # print(envstate)
             # print(experience.predict(prev_envstate))
-            # Get next action
             if np.random.rand() < epsilon:  # 입실론 보다 작으면
                 action = random.choice(valid_actions2)  # 탐험  여기수정해야겟다***********
                 # print(valid_actions2)
@@ -140,26 +136,24 @@ def qtrain(model, maze, **opt):
                 action = np.argmax(experience.predict(prev_envstate))  # 최대 Q 에 맞춰서 행동
                 # print(experience.predict(prev_envstate))
                 # print(valid_actions2)
-                # arg_n = 2
-                # while action not in valid_actions2:
-                #     action = experience.predict(prev_envstate).argsort()[arg_n]
-                #     arg_n = arg_n - 1
+                arg_n = 2
+                while action not in valid_actions2:
+                    action = experience.predict(prev_envstate).argsort()[arg_n]
+                    arg_n = arg_n - 1
 
             # Apply action, get reward and new envstate
             envstate, reward, game_status = qmaze.act(action)  # 액션을 취하고 리워드와 새 스테이트를 받는다
             total_reward += reward
             # time.sleep(3)
-            start_this.env.step(action)
+            start_this.env.step(action) # 단계 변화
 
             if game_status == 'win':  # 목적지에 도착했을 때
                 win_history.append(1)  # 히스토리에 1 추가
                 game_over = True  # 게임 끝
-                start_this.env.reset()  # 로봇을 초기 위치로 감
 
             elif game_status == 'lose':  # 게임에 졌을 때
                 win_history.append(0)  # 히스토리에 0 추가
                 game_over = True  # 게임 끝
-                start_this.env.reset()  # 로봇을 초기 위치로 감
             else:
                 game_over = False  # 게임 안끝남
 
@@ -170,13 +164,13 @@ def qtrain(model, maze, **opt):
 
             # Train neural network model
             # print("학습")
-            inputs, targets = experience.get_data(data_size=8)  # 타겟은 예측값
+            inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
             h = model.fit(
                 inputs,
                 targets,
-                epochs=4,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
+                epochs=8,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
                 # 하지만, 너무 많이 했을 경우 모델의 가중치가 학습 데이터에 지나치게 최적화되는 과적합(Overfitting) 현상이 발생합니다.
-                batch_size=8,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
+                batch_size=16,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
                 # batch_size 값이 크면 클수록 여러 데이터를 기억하고 있어야 하기에 메모리가 커야 합니다. 그대신 학습 시간이 빨라집니다.
                 # batch_size 값이 작으면 학습은 꼼꼼하게 이루어질 수 있지만 학습 시간이 많이 걸립니다.
                 verbose=0,  # Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
@@ -230,8 +224,8 @@ def qtrain(model, maze, **opt):
         if epsilon > temp_epsilon:
             epsilon = temp_epsilon
 
-        if sum(win_history[-hsize:]) == 0:
-            epsilon = 0.1
+        # if sum(win_history[-hsize:]) == 0:
+        #     epsilon = 0.1
 
         env.countEpsilon(epsilon)
         # print("epsilon = ", epsilon)
@@ -311,15 +305,6 @@ def qtrain(model, maze, **opt):
 
 
 def completion_check(model, maze):
-    # for cell in qmaze.free_cells:
-    #
-    #     if not qmaze.valid_actions(cell): # 가능한 길이 없으면 false
-    #         return False
-    #
-    #     if not start_this.play_game(model, qmaze, cell): # 모든 셀에 대하여 갈 곳이 없으면
-    #         return False
-    cell = (0, 0)
-
     if start_this.confirmResult(maze, env, model):
         return True
     else:
@@ -339,6 +324,7 @@ def format_time(seconds):
         return "%.2f hours" % (h,)
 
 def my_train():
+    global experience
     # Load the model from disk
     temp_model = build_model(maze_.total_maze)
     temp_model.load_weights("model.h5")
@@ -346,17 +332,16 @@ def my_train():
     experience = experience_.Experience(temp_model, max_memory=192000)
     experience.load()
 
+    inputs, targets = experience.get_data(data_size=experience.getsize())  # 타겟은 예측값
 
-
-    for i in range(1):
-        inputs, targets = experience.get_data(data_size=192000)  # 타겟은 예측값
+    for i in range(300):
 
         h = temp_model.fit(
             inputs,
             targets,
-            epochs=1,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
+            epochs=8,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
             # 하지만, 너무 많이 했을 경우 모델의 가중치가 학습 데이터에 지나치게 최적화되는 과적합(Overfitting) 현상이 발생합니다.
-            batch_size=192000,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
+            batch_size=8,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
             # batch_size 값이 크면 클수록 여러 데이터를 기억하고 있어야 하기에 메모리가 커야 합니다. 그대신 학습 시간이 빨라집니다.
             # batch_size 값이 작으면 학습은 꼼꼼하게 이루어질 수 있지만 학습 시간이 많이 걸립니다.
             verbose=0,  # Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.

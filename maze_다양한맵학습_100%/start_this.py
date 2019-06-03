@@ -85,7 +85,7 @@ def confirmResult(maze, env, model):
     env.countLose(0)
     win_counter = 0
     lose_counter = 0
-    play_game(model, Qmaze_.Qmaze(temp), (0, 0))  # 0의 위치에서 게임 시작
+    play_game(model, Qmaze_.Qmaze(temp))  # 0의 위치에서 게임 시작
     env.reset()  # 리셋
 
 

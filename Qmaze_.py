@@ -17,7 +17,7 @@ env = maze_.env
 increment_reward = 0
 
 class Qmaze(object):
-    def __init__(self, maze, rat=(0, 0)):  # maze는 맵 그린 array, rat은 로봇 좌표
+    def __init__(self, maze):  # maze는 맵 그린 array, rat은 로봇 좌표
 
 
         self._maze = np.array(maze)  # array 복사
@@ -27,6 +27,9 @@ class Qmaze(object):
         m, n = np.where(maze == 3)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
         self.target = (m, n)  # 목표점
 
+        m, n = np.where(maze == 4)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
+        self.initialrat= (m[0], n[0])  # 목표점
+        self.rat = self.initialrat
         # 1인 부분은 free_cell이라 지정 ( 이중 for문 )
         # free_cells는 (r,c) free_cell 좌표를 담은 배열
         self.block_cells = [(r, c) for r in range(nrows) for c in range(ncols) if self._maze[r, c] == 0.0]
@@ -38,14 +41,7 @@ class Qmaze(object):
         # 목표점은 free_cell이 아니기 때문에 배열에서 제거
         #self.free_cells.remove(self.target)
 
-        # 목표점을 0인 곳에 정의 했을 때
-        if self._maze[self.target] == 0.0:
-            raise Exception("Invalid maze: target cell cannot be blocked!")
-
-        # 로봇의 위치를 범위 밖에 정의했을 때
-        if not rat in self.free_cells:
-            raise Exception("Invalid Rat Location: must sit on a free cell")
-        self.reset(rat)
+        self.reset(self.initialrat)
 
     # 리셋하는 부분
     def reset(self, rat):
@@ -105,42 +101,35 @@ class Qmaze(object):
 
     # reward 받는 부분
     def get_reward(self):
+        global increment_reward
         rat_row, rat_col, mode = self.state  # 스테이트 정보를 받아옴
         nrows, ncols = self.maze.shape  # 맵 가로 세로 사이즈
-
-        global increment_reward
         increment_reward = 10
-
-        if rat_row == self.target[0] and rat_col == self.target[1]:  # 목적지 도착 시 리워드
-            if self.waypoint_count == self.total_waypoint_size:
-                increment_reward += 50
-                return increment_reward # 6
-            else:
-                # return 0
-                # print("다 안밟음")
-                return -20  # lose 조건에 만족
 
         if (rat_row, rat_col) in self.visited:  # 방문한 곳은 -0.25 리워드
             # print ("재방문")
             return -10
 
-        if mode == 'valid':  # 유효한 곳은 -0.04 리워드
-            if (rat_row, rat_col) in self.waypoint:  # 경유지 도착 시 리워드 #pks
+        if (rat_row, rat_col) in self.waypoint:  # 경유지 도착 시 리워드 #pks
+            self.waypoint_count += 1
+            print("경유지")
+
+            if self.waypoint_count == self.total_waypoint_size:
+                increment_reward += 50
+                return increment_reward  # 6
+            else:
                 # print("경유지", self.waypoint)
                 self.waypoint.remove((rat_row, rat_col))
                 # print("경유지삭제후", self.waypoint)
                 env.waypoint_color_change(rat_row, rat_col)
-                self.waypoint_count += 1
-                increment_reward += 5
-
                 self.maze[rat_row, rat_col] = 1.0
-
+                increment_reward += 5
                 return increment_reward  # 5
-            elif (rat_row, rat_col) in self.block_cells:  # 경유지 도착 시 리워드 #pks
-                print("벽 밟ㄷ았다")
-                return -20
-            else:
-                return -0.4  # - 0.04
+        elif (rat_row, rat_col) in self.block_cells:  # 경유지 도착 시 리워드 #pks
+            print("벽 밟ㄷ았다")
+            return -20
+        else:
+            return -0.4  # - 0.04
 
     def act(self, action):
         # print("액션: ", action)
@@ -177,6 +166,8 @@ class Qmaze(object):
 
         # draw the rat
         row, col, valid = self.state  # 스테이트를 다시 받음
+        if (valid != 'start' ):
+            canvas[self.initialrat[0], self.initialrat[1]] = 1
         canvas[row, col] = rat_mark  # 로봇 이동한 그림을 어레이로 다시 그림, 로봇 있는 곳은 0.5 벽은 0 길은 1
 
         return canvas
@@ -188,17 +179,24 @@ class Qmaze(object):
         rat_row, rat_col, mode = self.state  # 현재 스테이트를 확인함
         nrows, ncols = self.maze.shape  # 맵 배열 사이즈 얻음
 
-        if rat_row == self.target[0] and rat_col == self.target[1]:  # 목적지 좌표랑 일치할 때 win
+        # if rat_row == self.target[0] and rat_col == self.target[1]:  # 목적지 좌표랑 일치할 때 win
+        #
+        #     if self.waypoint_count == self.total_waypoint_size:
+        #         # print("total_reward: ", self.total_reward)
+        #         # print("경유지 카운터 = ", self.waypoint_count)
+        #         # print("경유지 토탈 = ", self.total_waypoint_size)
+        #         return 'win'
+        #     else:
+        #         return 'lose'
+        if self.waypoint_count == self.total_waypoint_size:
+            # print("total_reward: ", self.total_reward)
+            # print("경유지 카운터 = ", self.waypoint_count)
+            # print("경유지 토탈 = ", self.total_waypoint_size)
+            return 'win'
+        else:
+            return 'not_over'
 
-            if self.waypoint_count == self.total_waypoint_size:
-                # print("total_reward: ", self.total_reward)
-                # print("경유지 카운터 = ", self.waypoint_count)
-                # print("경유지 토탈 = ", self.total_waypoint_size)
-                return 'win'
-            else:
-                return 'lose'
-
-        return 'not_over'  # 게임이 끝나지 않았을 때 출력
+        # return 'not_over'  # 게임이 끝나지 않았을 때 출력
 
     # 가능한 액션들만 보여줌
     def valid_actions(self, cell=None):

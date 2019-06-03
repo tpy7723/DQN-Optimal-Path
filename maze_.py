@@ -15,11 +15,11 @@ else:
 #0은 까만 벽 1은 하얀 벽 2는 경유지 3은 목적지 4는 로봇
 total_maze = np.array([
     [1., 1., 1., 1.],
-    [0., 0., 2., 2.],
-    [2., 2., 2., 1.],
-    [1., 1., 0., 0.],
-    [2., 2., 1., 1.],
-    [1., 1., 2., 3.]
+    [1., 1., 1., 1.],
+    [1., 1., 1., 1.],
+    [1., 1., 1., 1.],
+    [1., 1., 1., 1.],
+    [1., 1., 1., 1.]
 ])
 
 m, n = np.where(total_maze == 3)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
@@ -34,9 +34,10 @@ MAZE_W = total_maze.shape[1]  # grid width 창 너비
 
 # 미로에 관한 클래스
 class Maze(tk.Tk, object):
-    def __init__(self, maze):
+    def __init__(self, maze, rat):
         super(Maze, self).__init__()
-        self.robot_location = (0, 0)
+        self.robot_initial_location = rat
+        self.robot_location = self.robot_initial_location
         self.total_maze = maze
         self.label2 = tk.Label(self, text="Total Reward: " + "0" ,justify = "left")
         self.label2.pack()
@@ -92,49 +93,6 @@ class Maze(tk.Tk, object):
     #     self.update()
     #     self.canvas.delete(self.way_point)
 
-    def changeMap(self, maze):
-        self.total_maze = maze
-        self.update()
-        self.canvas.delete("all")  # 맵에서 로봇을 지움
-        i, j = np.where(self.total_maze == 0)  # array에서 0을 찾고 행 렬 성분을 가짐 pks
-        k, l = np.where(self.total_maze == 2)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
-        m, n = np.where(self.total_maze == 3)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
-
-        # for i in range(0, k.size):
-        #     self.way_point.append(0)
-
-        # create origin
-        origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
-
-        for index in range(0, i.size):
-            hell1_center = origin + np.array([UNIT * j[index], UNIT * i[index]])  # 열 / 행  #60 20
-            # 검은 벽을 만듬
-            self.hell = self.canvas.create_rectangle(
-                hell1_center[0] - 20, hell1_center[1] - 20, hell1_center[0] + 20, hell1_center[1] + 20,  # 40,0,80,40,
-                fill='black')
-
-        # 목적지
-        oval_center = origin + np.array([UNIT * n[0], UNIT * m[0]])
-        self.oval = self.canvas.create_rectangle(
-            oval_center[0] - 20, oval_center[1] - 20, oval_center[0] + 20, oval_center[1] + 20,
-            fill='yellow')
-
-        # 경유지
-        for index in range(0, k.size):
-            waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
-            # 핑크 벽을 만듬
-            self.way_point = self.canvas.create_rectangle(
-                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
-                # 40,0,80,40,
-                fill='blue')
-
-        # 로봇
-        robot_center = origin + np.array([UNIT * self.robot_location[1], self.robot_location[0]])  # 열 / 행  #60 20
-        self.rect = self.canvas.create_rectangle(
-            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
-        self.canvas.pack()
-
     # 맵을 만듬
     def build_maze(self):
         self.canvas = tk.Canvas(self, bg='white',
@@ -143,10 +101,6 @@ class Maze(tk.Tk, object):
 
         i, j = np.where(self.total_maze == 0)  # array에서 0을 찾고 행 렬 성분을 가짐 pks
         k, l = np.where(self.total_maze == 2)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
-        m, n = np.where(self.total_maze == 3)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
-
-        # for i in range(0, k.size):
-        #     self.way_point.append(0)
 
         # create origin
         origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
@@ -157,12 +111,6 @@ class Maze(tk.Tk, object):
             self.hell = self.canvas.create_rectangle(
                 hell1_center[0] - 20, hell1_center[1] - 20, hell1_center[0] + 20, hell1_center[1] + 20,  # 40,0,80,40,
                 fill='black')
-
-        # 목적지
-        oval_center = origin + np.array([UNIT * n[0], UNIT * m[0]])
-        self.oval = self.canvas.create_rectangle(
-            oval_center[0] - 20, oval_center[1] - 20, oval_center[0] + 20, oval_center[1] + 20,
-            fill='yellow')
 
         # 경유지
         for index in range(0, k.size):
@@ -184,44 +132,21 @@ class Maze(tk.Tk, object):
         # create origin
         origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
         waypoint_center = origin + np.array([UNIT * colomn, UNIT * raw])  # 열 / 행  #60 20
-        # 핑크 벽을 만듬
+
+        # 하얀 벽을 만듬
         self.white_point = self.canvas.create_rectangle(
             waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
             # 40,0,80,40,
             fill='white', outline='white')
 
-        self.canvas.delete(self.rect)  # 맵에서 로봇을 지움
+        #로봇을 다시그림
+        self.canvas.delete(self.rect)
         robot_center = origin + np.array([UNIT * colomn, UNIT * raw])  # 열 / 행  #60 20
         self.rect = self.canvas.create_rectangle(
             robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
             fill='red')
 
-
-    # 맵 초기화
-    def reset(self):
-        self.update()
-        self.canvas.delete(self.rect)  # 맵에서 로봇을 지움
-
-        robot_center = np.array([20, 20]) + np.array([UNIT * self.robot_location[1], UNIT * self.robot_location[0]])  # 시작지점 다시 만듬
-        self.rect = self.canvas.create_rectangle(
-            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
-
-        # create origin
-        origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
-
-        k, l = np.where(self.total_maze == 2)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
-
-        # 경유지
-        for index in range(0, k.size):
-            waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
-            # 핑크 벽을 만듬
-            self.way_point = self.canvas.create_rectangle(
-                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
-                # 40,0,80,40,
-                fill='blue')
-
-    # 다음 스테이트로 넘어가는 함수
+    # 로봇 이동
     def step(self, action):
         s = self.canvas.coords(self.rect)  # 로봇 좌표를 받아옴
 
@@ -249,16 +174,13 @@ class Maze(tk.Tk, object):
                 self.label3.config(text="방향: " + "Left")
                 base_action[0] -= UNIT  # 좌우는 두번쨰 값에 관여, left은 40뺴고 right은 40 더한다.
 
-        # self.visitcolor = self.canvas.create_rectangle(
-        #     s,
-        #     fill='gray')
-
         self.canvas.move(self.rect, base_action[0], base_action[1])  # move agent  위에 것들은 무브하기 위해 구한 듯
         self.render()
 
     def render(self):
         self.update()
 
+    # 맵 초기화: 로봇
     def reset_location(self, robot):
         self.robot_location = robot
         self.canvas.delete(self.rect)  # 맵에서 로봇을 지움
@@ -269,4 +191,63 @@ class Maze(tk.Tk, object):
             robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
             fill='red')
 
-env = Maze(total_maze)
+    # 맵 초기화: 로봇, 경유지
+    def reset(self):
+        self.update()
+        self.canvas.delete(self.rect)  # 맵에서 로봇을 지움
+
+        # print('initial', self.robot_initial_location)
+        robot_center = np.array([20, 20]) + np.array([UNIT * self.robot_initial_location[1], UNIT * self.robot_initial_location[0]])  # 시작지점 다시 만듬
+        self.rect = self.canvas.create_rectangle(
+            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
+            fill='red')
+
+        # create origin
+        origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
+
+        k, l = np.where(self.total_maze == 2)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
+
+        # 경유지
+        for index in range(0, k.size):
+            waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
+            # 핑크 벽을 만듬
+            self.way_point = self.canvas.create_rectangle(
+                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
+                # 40,0,80,40,
+                fill='blue')
+
+    # 맵 초기화: 로봇, 경유지, 벽
+    def changeMap(self, maze):
+        self.total_maze = maze
+        self.update()
+        self.canvas.delete("all")  # 맵에서 로봇을 지움
+        i, j = np.where(self.total_maze == 0)  # array에서 0을 찾고 행 렬 성분을 가짐 pks
+        k, l = np.where(self.total_maze == 2)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
+
+        # create origin
+        origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
+
+        for index in range(0, i.size):
+            hell1_center = origin + np.array([UNIT * j[index], UNIT * i[index]])  # 열 / 행  #60 20
+            # 검은 벽을 만듬
+            self.hell = self.canvas.create_rectangle(
+                hell1_center[0] - 20, hell1_center[1] - 20, hell1_center[0] + 20, hell1_center[1] + 20,  # 40,0,80,40,
+                fill='black')
+
+        # 경유지
+        for index in range(0, k.size):
+            waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
+            # 핑크 벽을 만듬
+            self.way_point = self.canvas.create_rectangle(
+                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
+                # 40,0,80,40,
+                fill='blue')
+
+        # 로봇
+        robot_center = origin + np.array([UNIT * self.robot_location[1], self.robot_location[0]])  # 열 / 행  #60 20
+        self.rect = self.canvas.create_rectangle(
+            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
+            fill='red')
+        self.canvas.pack()
+
+env = Maze(total_maze, (0,0))
