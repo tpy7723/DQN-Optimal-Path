@@ -23,7 +23,7 @@ def play_game(model, qmaze, rat_cell):
         # time.sleep(mytime)
 
         prev_envstate = envstate  # 스테이트를 전환
-        print("envstate: " , envstate)
+        # print("envstate: " , envstate)
         # get next action
         q = model.predict(prev_envstate)  # 스테이트를 넣고 q 배열이 나옴
         # print("q: ", q)
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     elif (a == '1'):
         # trainMat(total_map[6], env, model)
         # trainMat(total_map[5], env, model)
-        for j in range(1):  # 반복횟수
+        for j in range(5):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j+1, i+1)
                 trainMat(total_map[i], env, model)
@@ -156,8 +156,8 @@ if __name__ == "__main__":
                 qtrain_.experience.save()
                 # trainMat(total_map[i], env, model)
 
-        # time.sleep(10)
-        # qtrain_.my_train()
+        time.sleep(10)
+        qtrain_.my_train()
 
     elif (a == '2'):
         model.load_weights('model.h5')  # 트레인 데이터를 불러옴

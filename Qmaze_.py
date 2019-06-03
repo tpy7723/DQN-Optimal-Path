@@ -112,7 +112,7 @@ class Qmaze(object):
 
         if (rat_row, rat_col) in self.waypoint:  # 경유지 도착 시 리워드 #pks
             self.waypoint_count += 1
-            print("경유지")
+            # print("경유지")
 
             if self.waypoint_count == self.total_waypoint_size:
                 increment_reward += 50

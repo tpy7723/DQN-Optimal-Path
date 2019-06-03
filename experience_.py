@@ -26,7 +26,10 @@ class Experience(object):
 
     def load(self):
         with open('experience_memory.p','rb') as file:
-            self.memory = pickle.load(file)
+            try:
+                self.memory = pickle.load(file)
+            except EOFError:
+                return {}
             # print(self.memory)
 
     # 메모리에 에피소드 추가하는 함수
