@@ -70,7 +70,7 @@ def trainMat(maze, env, model):
     lose_counter = 0
 
     # 기존 것에 더 학습
-    qtrain_.qtrain(model, temp, epochs=1000, max_memory=80 * maze.size, data_size=32, weights_file="model.h5")
+    qtrain_.qtrain(model, temp, epochs=400, max_memory=80 * maze.size, data_size=32, weights_file="model.h5")
     # model.save('model.h5')
 
 
