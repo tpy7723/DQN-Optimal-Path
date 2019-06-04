@@ -14,13 +14,14 @@ env = maze_.env
 
 def play_game(model, qmaze, rat_cell):
     global win_counter, lose_counter
+    env.changeMap(qmaze._maze)
     qmaze.reset(rat_cell)  # 입력 받은 위치로 로봇을 맵에 초기화함
     envstate = qmaze.observe()  # 현재 스테이트를 받아옴
 
-    mytime = 0
+    mytime = 0.01
     while True:
         env.render()
-        # time.sleep(mytime)
+        time.sleep(mytime)
 
         prev_envstate = envstate  # 스테이트를 전환
         # print("envstate: " , envstate)
@@ -47,14 +48,14 @@ def play_game(model, qmaze, rat_cell):
             print("win\n")  # win
             win_counter += 1
             env.countWin(win_counter)
-            # time.sleep(mytime)
+            time.sleep(mytime)
             return True  # true
 
         elif game_status == 'lose':  # 갈 곳이 없으면
             print("lose\n")  # lose
             lose_counter += 1
             env.countLose(lose_counter)
-            # time.sleep(mytime)
+            time.sleep(mytime)
             return False  # false
 
 
@@ -93,6 +94,7 @@ def confirmResult(maze, env, model):
     global win_counter, lose_counter
     temp = maze
     qmaze = Qmaze_.Qmaze(temp)
+    print(temp)
     env.changeMap(temp)
 
     env.countWin(0)
@@ -148,16 +150,16 @@ if __name__ == "__main__":
     elif (a == '1'):
         # trainMat(total_map[6], env, model)
         # trainMat(total_map[5], env, model)
-        for j in range(5):  # 반복횟수
+        for j in range(1):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j+1, i+1)
                 trainMat(total_map[i], env, model)
                 print("메모리 길이: ",len(qtrain_.experience.memory))
-                qtrain_.experience.save()
+        qtrain_.experience.save()
                 # trainMat(total_map[i], env, model)
 
-        time.sleep(10)
-        qtrain_.my_train()
+        # time.sleep(10)
+        # qtrain_.my_train()
 
     elif (a == '2'):
         model.load_weights('model.h5')  # 트레인 데이터를 불러옴

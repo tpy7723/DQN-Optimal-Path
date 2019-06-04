@@ -154,7 +154,7 @@ class Maze(tk.Tk, object):
 
         # 맵 안 벗어나게 하는 과정
         if action == 1:  # up
-            if s[1] > UNIT:
+            if s[1] >= UNIT:
                 # print("up")
                 self.label3.config(text="방향: " + "UP")
                 base_action[1] -= UNIT
@@ -223,6 +223,7 @@ class Maze(tk.Tk, object):
         self.canvas.delete("all")  # 맵에서 로봇을 지움
         i, j = np.where(self.total_maze == 0)  # array에서 0을 찾고 행 렬 성분을 가짐 pks
         k, l = np.where(self.total_maze == 2)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
+        m, n = np.where(self.total_maze == 4)  # array에서 2를 찾고 행 렬 성분을 가짐 pks
 
         # create origin
         origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
@@ -244,7 +245,7 @@ class Maze(tk.Tk, object):
                 fill='blue')
 
         # 로봇
-        robot_center = origin + np.array([UNIT * self.robot_location[1], self.robot_location[0]])  # 열 / 행  #60 20
+        robot_center = origin + np.array([UNIT * n[0], UNIT * m[0]])  # 열 / 행  #60 20
         self.rect = self.canvas.create_rectangle(
             robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
             fill='red')
