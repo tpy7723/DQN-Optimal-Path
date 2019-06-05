@@ -14,11 +14,11 @@ env = maze_.env
 
 def play_game(model, qmaze, rat_cell):
     global win_counter, lose_counter
-    env.changeMap(qmaze._maze)
+    # env.changeMap(qmaze._maze)
     qmaze.reset(rat_cell)  # 입력 받은 위치로 로봇을 맵에 초기화함
     envstate = qmaze.observe()  # 현재 스테이트를 받아옴
 
-    mytime = 0.01
+    mytime = 0.05
     while True:
         env.render()
         time.sleep(mytime)
@@ -71,7 +71,7 @@ def trainMat(maze, env, model):
     lose_counter = 0
 
     # 기존 것에 더 학습
-    qtrain_.qtrain(model, temp, epochs=400, max_memory=80 * maze.size, data_size=32, weights_file="model.h5")
+    qtrain_.qtrain(model, temp, epochs=1000, max_memory=80 * maze.size, data_size=32, weights_file="model.h5")
     # model.save('model.h5')
 
 
@@ -94,7 +94,7 @@ def confirmResult(maze, env, model):
     global win_counter, lose_counter
     temp = maze
     qmaze = Qmaze_.Qmaze(temp)
-    print(temp)
+    # print(temp)
     env.changeMap(temp)
 
     env.countWin(0)
@@ -141,11 +141,11 @@ if __name__ == "__main__":
     # Load the model from disk
     model = qtrain_.build_model(maze)
     if (a == '0'):
-        for j in range(1000):  # 반복횟수
+        for j in range(3):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j + 1, i + 1)
                 trainMat_new(total_map[i], env, model)
-                qtrain_.experience.save()
+            qtrain_.experience.save()
 
     elif (a == '1'):
         # trainMat(total_map[6], env, model)

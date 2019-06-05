@@ -125,11 +125,11 @@ class Qmaze(object):
                 self.maze[rat_row, rat_col] = 1.0
                 increment_reward += 5
                 return increment_reward  # 5
-        elif (rat_row, rat_col) in self.block_cells:  # 경유지 도착 시 리워드 #pks
-            print("벽 밟ㄷ았다")
-            return -20
+        # elif (rat_row, rat_col) in self.block_cells:  # 경유지 도착 시 리워드 #pks
+        #     print("벽 밟ㄷ았다")
+        #     return -20
         else:
-            return -0.4  # - 0.04
+            return -1  # - 0.04
 
     def act(self, action):
         # print("액션: ", action)

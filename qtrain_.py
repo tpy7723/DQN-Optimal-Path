@@ -29,7 +29,7 @@ actions_dict = {
 }
 
 # Exploration factor 탐험률 0.1
-epsilon = 0.15
+epsilon = 0.2
 
 # 액션의 수 (상하 좌우)  = 4
 num_actions = len(actions_dict)
@@ -69,7 +69,7 @@ def qtrain(model, maze, **opt):
     # print("답",maze)
     # env = maze_.Maze(maze)
     # env.reset()
-    epsilon = 0.15
+    epsilon = 0.2
     counter = 0
 
     n_epoch = opt.get('epochs', 15000)  # 15000 epoch 횟수
@@ -95,7 +95,7 @@ def qtrain(model, maze, **opt):
     # # Initialize experience replay object
     if experience_exist == 0:
         experience = experience_.Experience(model, max_memory=192000)
-        experience.load()
+        # experience.load()
         print("로드")
         experience_exist = 1
 
@@ -206,21 +206,21 @@ def qtrain(model, maze, **opt):
         # cases the agent won
 
         if win_rate >= 0.875:
-            temp_epsilon = 0.005  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.750:
             temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.625:
-            temp_epsilon = 0.015  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.500:
+        elif win_rate >= 0.750:
             temp_epsilon = 0.02  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.375:
+        elif win_rate >= 0.625:
             temp_epsilon = 0.04  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.250:
+        elif win_rate >= 0.500:
             temp_epsilon = 0.06  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        elif win_rate >= 0.375:
+            temp_epsilon = 0.08  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        elif win_rate >= 0.250:
+            temp_epsilon = 0.12  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.125:
-            temp_epsilon = 0.1  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.000:
             temp_epsilon = 0.15  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        elif win_rate >= 0.000:
+            temp_epsilon = 0.2  # 성공률 90프로 일 때 입실론 값 대폭 감소
 
         if epsilon > temp_epsilon:
             epsilon = temp_epsilon

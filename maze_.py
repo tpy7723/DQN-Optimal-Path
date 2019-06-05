@@ -4,12 +4,11 @@ import sys
 import numpy as np
 import Qmaze_
 #import image_
-if sys.version_info.major == 2:
-    import Tkinter as tk
-else:
-    import tkinter as tk
-
-
+# if sys.version_info.major == 2:
+#     import Tkinter as tk
+# else:
+#     import tkinter as tk
+from tkinter import *
 # total_maze = image_.myMaze
 
 #0은 까만 벽 1은 하얀 벽 2는 경유지 3은 목적지 4는 로봇
@@ -33,40 +32,47 @@ MAZE_H = total_maze.shape[0]  # grid height 창 높이
 MAZE_W = total_maze.shape[1]  # grid width 창 너비
 
 # 미로에 관한 클래스
-class Maze(tk.Tk, object):
+class Maze(Tk, object):
     def __init__(self, maze, rat):
         super(Maze, self).__init__()
         self.robot_initial_location = rat
         self.robot_location = self.robot_initial_location
         self.total_maze = maze
-        self.label2 = tk.Label(self, text="Total Reward: " + "0" ,justify = "left")
+        self.label2 = Label(self, text="Total Reward: " + "0" ,justify = "left")
         self.label2.pack()
 
-        self.label3 = tk.Label(self, text="0") # 방향
+        self.label3 = Label(self, text="0") # 방향
         self.label3.pack()
 
-        self.label4 = tk.Label(self, text="성공: " + "0")
+        self.label4 = Label(self, text="성공: " + "0")
         self.label4.pack()
 
-        self.label5 = tk.Label(self, text="실패: " + "0")
+        self.label5 = Label(self, text="실패: " + "0")
         self.label5.pack()
 
-        self.label6 = tk.Label(self, text="Win Rate: " + "0")
+        self.label6 = Label(self, text="Win Rate: " + "0")
         self.label6.pack()
 
-        self.label7 = tk.Label(self, text="epsilon: " + "0")
+        self.label7 = Label(self, text="epsilon: " + "0")
         self.label7.pack()
 
-        self.label8 = tk.Label(self, text="회차/케이스: " + "0/0")
+        self.label8 = Label(self, text="회차/케이스: " + "0/0")
         self.label8.pack()
+
+
 
         self.title('maze')
         self.geometry('{0}x{1}+200+200'.format(self.total_maze.shape[0] * UNIT, self.total_maze.shape[1] * UNIT+300))
         self.build_maze()
+        self.lift()
+        self.attributes("-topmost", True)
         self.way_point = []
 
-
-
+        # wall = PhotoImage(file="test.gif")
+        #
+        # self.wall_label = Label(image=wall)
+        # self.wall_label.pack()
+        # self.wall_label.place(x=-2, y=40)
 
         # button = tk.Button(self, overrelief="solid", width=15, command=self.countUP, repeatdelay=1000,
         #                    repeatinterval=100)
@@ -95,7 +101,7 @@ class Maze(tk.Tk, object):
 
     # 맵을 만듬
     def build_maze(self):
-        self.canvas = tk.Canvas(self, bg='white',
+        self.canvas = Canvas(self, bg='white',
                                 height=self.total_maze.shape[0] * UNIT,
                                 width=self.total_maze.shape[1] * UNIT)  # 표현할 창을 띄움
 
@@ -117,14 +123,14 @@ class Maze(tk.Tk, object):
             waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
             # 핑크 벽을 만듬
             self.way_point = self.canvas.create_rectangle(
-                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,  # 40,0,80,40,
-                fill='blue')
+                waypoint_center[0] - 10, waypoint_center[1] - 10, waypoint_center[0] + 10, waypoint_center[1] + 10,  # 40,0,80,40,
+                fill='red')
 
         # 로봇
         robot_center = origin + np.array([UNIT * self.robot_location[1], self.robot_location[0]])  # 열 / 행  #60 20
-        self.rect = self.canvas.create_rectangle(
-            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
+        self.rect = self.canvas.create_oval(
+            robot_center[0] - 15, robot_center[1] - 15, robot_center[0] + 15, robot_center[1] + 15,
+            fill='blue')
         self.canvas.pack()
 
     # 경유지 밟았을 때
@@ -142,9 +148,9 @@ class Maze(tk.Tk, object):
         #로봇을 다시그림
         self.canvas.delete(self.rect)
         robot_center = origin + np.array([UNIT * colomn, UNIT * raw])  # 열 / 행  #60 20
-        self.rect = self.canvas.create_rectangle(
-            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
+        self.rect = self.canvas.create_oval(
+            robot_center[0] - 15, robot_center[1] - 15, robot_center[0] + 15, robot_center[1] + 15,
+            fill='blue')
 
     # 로봇 이동
     def step(self, action):
@@ -187,9 +193,9 @@ class Maze(tk.Tk, object):
         # 로봇
         robot_center = np.array([20, 20]) + np.array(
             [UNIT * self.robot_location[1], UNIT * self.robot_location[0]])  # 시작지점 다시 만듬
-        self.rect = self.canvas.create_rectangle(
-            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
+        self.rect = self.canvas.create_oval(
+            robot_center[0] - 15, robot_center[1] - 15, robot_center[0] + 15, robot_center[1] + 15,
+            fill='blue')
 
     # 맵 초기화: 로봇, 경유지
     def reset(self):
@@ -200,7 +206,7 @@ class Maze(tk.Tk, object):
         robot_center = np.array([20, 20]) + np.array([UNIT * self.robot_initial_location[1], UNIT * self.robot_initial_location[0]])  # 시작지점 다시 만듬
         self.rect = self.canvas.create_rectangle(
             robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
+            fill='blue')
 
         # create origin
         origin = np.array([20, 20])  # 픽셀 크기 / 2 , 픽셀 크기 / 2
@@ -212,9 +218,9 @@ class Maze(tk.Tk, object):
             waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
             # 핑크 벽을 만듬
             self.way_point = self.canvas.create_rectangle(
-                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
+                waypoint_center[0] - 10, waypoint_center[1] - 10, waypoint_center[0] + 10, waypoint_center[1] + 10,
                 # 40,0,80,40,
-                fill='blue')
+                fill='red')
 
     # 맵 초기화: 로봇, 경유지, 벽
     def changeMap(self, maze):
@@ -240,15 +246,15 @@ class Maze(tk.Tk, object):
             waypoint_center = origin + np.array([UNIT * l[index], UNIT * k[index]])  # 열 / 행  #60 20
             # 핑크 벽을 만듬
             self.way_point = self.canvas.create_rectangle(
-                waypoint_center[0] - 20, waypoint_center[1] - 20, waypoint_center[0] + 20, waypoint_center[1] + 20,
+                waypoint_center[0] - 10, waypoint_center[1] - 10, waypoint_center[0] + 10, waypoint_center[1] + 10,
                 # 40,0,80,40,
-                fill='blue')
+                fill='red')
 
         # 로봇
         robot_center = origin + np.array([UNIT * n[0], UNIT * m[0]])  # 열 / 행  #60 20
-        self.rect = self.canvas.create_rectangle(
-            robot_center[0] - 20, robot_center[1] - 20, robot_center[0] + 20, robot_center[1] + 20,
-            fill='red')
+        self.rect = self.canvas.create_oval(
+            robot_center[0] - 15, robot_center[1] - 15, robot_center[0] + 15, robot_center[1] + 15,
+            fill='blue')
         self.canvas.pack()
 
 env = Maze(total_maze, (0,0))

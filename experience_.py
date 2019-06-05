@@ -57,7 +57,7 @@ class Experience(object):
         targets = np.zeros((data_size, self.num_actions))
 
 
-        for i, j in enumerate(np.random.choice(range(mem_size), data_size, replace=False)):
+        for i, j in enumerate(np.random.choice(range(mem_size-1), data_size-1, replace=False)):
             envstate, action, reward, envstate_next, game_over = self.memory[j]  # 메모리에서 에피소드를 꺼냄
             inputs[i] = envstate # 데이터 사이즈 만큼 상태들을 저장함
 
@@ -69,5 +69,17 @@ class Experience(object):
             else: # 게임이 끝나지 않았으면
                 # reward + gamma * max_a' Q(s', a')
                 targets[i, action] = reward + self.discount * Q_sa # 예측 값을 넣음
+
+        envstate, action, reward, envstate_next, game_over = self.memory[mem_size-1]  # 메모리에서 에피소드를 꺼냄
+        inputs[data_size-1] = envstate # 데이터 사이즈 만큼 상태들을 저장함
+
+        # There should be no target values for actions not taken.
+        targets[data_size-1] = self.predict(envstate) # 현재 스테이트의 벨류
+        Q_sa = np.max(self.predict(envstate_next)) # 다음 스테이트에서의 최대 벨류
+        if game_over: # 게임이 끝나면
+            targets[data_size-1, action] = reward # 현재 리워드를 넣음
+        else: # 게임이 끝나지 않았으면
+            # reward + gamma * max_a' Q(s', a')
+            targets[data_size-1, action] = reward + self.discount * Q_sa # 예측 값을 넣음
 
         return inputs, targets # 스테이트 저장소, Q 테이블
