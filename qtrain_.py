@@ -29,7 +29,7 @@ actions_dict = {
 }
 
 # Exploration factor 탐험률 0.1
-epsilon = 0.2
+epsilon = 0.175
 
 # 액션의 수 (상하 좌우)  = 4
 num_actions = len(actions_dict)
@@ -40,13 +40,13 @@ y_ = []
 # 맵에 대해 모델 생성하는 함수
 def build_model(maze):
     model = Sequential()  # 모델 생성 ann
-    model.add(Dense(maze.size *3, input_shape=(maze.size,)))  # input , 1st hidden
+    model.add(Dense(maze.size * 4, input_shape=(maze.size,)))  # input , 1st hidden
     model.add(PReLU())  # activation function
     model.add(Dropout(0.2))
-    model.add(Dense(maze.size*3))  # 2nd hidden
+    model.add(Dense(maze.size* 4))  # 2nd hidden
     model.add(PReLU())  # activation function
     model.add(Dropout(0.2))
-    model.add(Dense(maze.size * 3))  # 2nd hidden
+    model.add(Dense(maze.size * 4))  # 2nd hidden
     model.add(PReLU())  # activation function
     model.add(Dropout(0.2))
     model.add(Dense(num_actions))  # output
@@ -69,7 +69,7 @@ def qtrain(model, maze, **opt):
     # print("답",maze)
     # env = maze_.Maze(maze)
     # env.reset()
-    epsilon = 0.2
+    epsilon = 0.175
     counter = 0
 
     n_epoch = opt.get('epochs', 15000)  # 15000 epoch 횟수
@@ -94,7 +94,7 @@ def qtrain(model, maze, **opt):
     # experience = experience_.Experience(model, max_memory=max_memory)
     # # Initialize experience replay object
     if experience_exist == 0:
-        experience = experience_.Experience(model, max_memory=192000)
+        experience = experience_.Experience(model, max_memory=19200)
         # experience.load()
         print("로드")
         experience_exist = 1
@@ -220,7 +220,7 @@ def qtrain(model, maze, **opt):
         elif win_rate >= 0.125:
             temp_epsilon = 0.15  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.000:
-            temp_epsilon = 0.2  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.175  # 성공률 90프로 일 때 입실론 값 대폭 감소
 
         if epsilon > temp_epsilon:
             epsilon = temp_epsilon
@@ -333,16 +333,17 @@ def my_train():
     experience = experience_.Experience(temp_model, max_memory=192000)
     experience.load()
 
-    inputs, targets = experience.get_data(data_size=experience.getsize())  # 타겟은 예측값
 
-    for i in range(30):
+
+    for i in range(30000):
+        inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
 
         h = temp_model.fit(
             inputs,
             targets,
             epochs=8,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
             # 하지만, 너무 많이 했을 경우 모델의 가중치가 학습 데이터에 지나치게 최적화되는 과적합(Overfitting) 현상이 발생합니다.
-            batch_size=8,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
+            batch_size=16,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
             # batch_size 값이 크면 클수록 여러 데이터를 기억하고 있어야 하기에 메모리가 커야 합니다. 그대신 학습 시간이 빨라집니다.
             # batch_size 값이 작으면 학습은 꼼꼼하게 이루어질 수 있지만 학습 시간이 많이 걸립니다.
             verbose=0,  # Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
