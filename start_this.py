@@ -141,7 +141,7 @@ if __name__ == "__main__":
     # Load the model from disk
     model = qtrain_.build_model(maze)
     if (a == '0'):
-        for j in range(1):  # 반복횟수
+        for j in range(5):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j + 1, i + 1)
                 trainMat_new(total_map[i], env, model)
