@@ -29,7 +29,7 @@ actions_dict = {
 }
 
 # Exploration factor 탐험률 0.1
-epsilon = 0.175
+epsilon = 0.2
 
 # 액션의 수 (상하 좌우)  = 4
 num_actions = len(actions_dict)
@@ -40,13 +40,13 @@ y_ = []
 # 맵에 대해 모델 생성하는 함수
 def build_model(maze):
     model = Sequential()  # 모델 생성 ann
-    model.add(Dense(maze.size * 4, input_shape=(maze.size,)))  # input , 1st hidden
+    model.add(Dense(maze.size *3, input_shape=(maze.size,)))  # input , 1st hidden
     model.add(PReLU())  # activation function
     model.add(Dropout(0.2))
-    model.add(Dense(maze.size* 4))  # 2nd hidden
+    model.add(Dense(maze.size*3))  # 2nd hidden
     model.add(PReLU())  # activation function
     model.add(Dropout(0.2))
-    model.add(Dense(maze.size * 4))  # 2nd hidden
+    model.add(Dense(maze.size * 3))  # 2nd hidden
     model.add(PReLU())  # activation function
     model.add(Dropout(0.2))
     model.add(Dense(num_actions))  # output
@@ -69,7 +69,7 @@ def qtrain(model, maze, **opt):
     # print("답",maze)
     # env = maze_.Maze(maze)
     # env.reset()
-    epsilon = 0.175
+    epsilon = 0.2
     counter = 0
 
     n_epoch = opt.get('epochs', 15000)  # 15000 epoch 횟수
@@ -94,14 +94,14 @@ def qtrain(model, maze, **opt):
     # experience = experience_.Experience(model, max_memory=max_memory)
     # # Initialize experience replay object
     if experience_exist == 0:
-        experience = experience_.Experience(model, max_memory=19200)
+        experience = experience_.Experience(model, max_memory=192000)
         # experience.load()
         print("로드")
         experience_exist = 1
 
     win_history = []  # history of win/lose game
     # hsize = qmaze.maze.size // 2  # history window size = 8
-    hsize = 8
+    hsize = 4
     win_rate = 0.0  # 성공률 초기화
 
     for epoch in range(n_epoch):  # epoch 수 만큼 반복
@@ -204,23 +204,31 @@ def qtrain(model, maze, **opt):
         # we simply check if training has exhausted all free cells and if in all
 
         # cases the agent won
-
-        if win_rate >= 0.875:
+        if   win_rate >= 0.75:
             temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.750:
-            temp_epsilon = 0.02  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.625:
-            temp_epsilon = 0.04  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.500:
-            temp_epsilon = 0.06  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.375:
-            temp_epsilon = 0.08  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.250:
-            temp_epsilon = 0.12  # 성공률 90프로 일 때 입실론 값 대폭 감소
-        elif win_rate >= 0.125:
-            temp_epsilon = 0.15  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        elif win_rate >= 0.50:
+            temp_epsilon = 0.7  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        elif win_rate >= 0.25:
+            temp_epsilon = 0.1  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.000:
-            temp_epsilon = 0.175  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.2  # 성공률 90프로 일 때 입실론 값 대폭 감소
+
+        # if win_rate >= 0.875:
+        #     temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.750:
+        #     temp_epsilon = 0.02  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.625:
+        #     temp_epsilon = 0.04  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.500:
+        #     temp_epsilon = 0.06  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.375:
+        #     temp_epsilon = 0.08  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.250:
+        #     temp_epsilon = 0.12  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.125:
+        #     temp_epsilon = 0.15  # 성공률 90프로 일 때 입실론 값 대폭 감소
+        # elif win_rate >= 0.000:
+        #     temp_epsilon = 0.2  # 성공률 90프로 일 때 입실론 값 대폭 감소
 
         if epsilon > temp_epsilon:
             epsilon = temp_epsilon
@@ -333,10 +341,9 @@ def my_train():
     experience = experience_.Experience(temp_model, max_memory=192000)
     experience.load()
 
+    inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
 
-
-    for i in range(30000):
-        inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
+    for i in range(3000):
 
         h = temp_model.fit(
             inputs,

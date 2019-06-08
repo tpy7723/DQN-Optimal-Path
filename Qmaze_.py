@@ -108,11 +108,12 @@ class Qmaze(object):
 
         if (rat_row, rat_col) in self.visited:  # 방문한 곳은 -0.25 리워드
             # print ("재방문")
-            return -8
+            return -10
 
         if (rat_row, rat_col) in self.waypoint:  # 경유지 도착 시 리워드 #pks
             self.waypoint_count += 1
             # print("경유지")
+            self.visited.clear()
 
             if self.waypoint_count == self.total_waypoint_size:
                 increment_reward += 50
@@ -129,7 +130,7 @@ class Qmaze(object):
         #     print("벽 밟ㄷ았다")
         #     return -20
         else:
-            return -0.7  # - 0.04
+            return -1  # - 0.04
 
     def act(self, action):
         # print("액션: ", action)

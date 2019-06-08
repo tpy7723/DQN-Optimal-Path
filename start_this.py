@@ -2,6 +2,8 @@
 
 from __future__ import print_function
 import os
+import pickle
+
 import numpy as np
 import Qmaze_
 import maze_
@@ -18,7 +20,7 @@ def play_game(model, qmaze, rat_cell):
     qmaze.reset(rat_cell)  # 입력 받은 위치로 로봇을 맵에 초기화함
     envstate = qmaze.observe()  # 현재 스테이트를 받아옴
 
-    mytime = 0.00
+    mytime = 0.0
     while True:
         env.render()
         time.sleep(mytime)
@@ -141,7 +143,7 @@ if __name__ == "__main__":
     # Load the model from disk
     model = qtrain_.build_model(maze)
     if (a == '0'):
-        for j in range(5):  # 반복횟수
+        for j in range(1):  # 반복횟수
             for i in range(len(total_map)):
                 env.countRepeat(j + 1, i + 1)
                 trainMat_new(total_map[i], env, model)
@@ -163,19 +165,28 @@ if __name__ == "__main__":
 
     elif (a == '2'):
         model.load_weights('model.h5')  # 트레인 데이터를 불러옴
-
+        win_map = []
+        fail_map=[]
 
         win = 0
         lose = 0
         for i in range(len(total_map)):
             env.countRepeat(1,i+1)
             if confirmResult(total_map[i], env, model): # image_.myMaze
+                win_map.append(total_map[i])
                 win += 1
             else:
+                fail_map.append(total_map[i])
                 lose += 1
                 # trainMat(total_map[i], env, model)
                 # model.load_weights('model.h5')  # 트레인 데이터를 불러옴
             # time.sleep(0.5)
+
+        with open('win_map.p','wb') as file:
+            pickle.dump(win_map, file)
+
+        with open('fail_map.p','wb') as file:
+            pickle.dump(fail_map, file)
         print("성공 갯수: %d, 실패 갯수: %d" % (win, lose))
 
     elif (a == '3'):
@@ -218,6 +229,31 @@ if __name__ == "__main__":
             confirmResult(total_maze, env, model)
     elif (a == '5'):
         qtrain_.my_train()
+
+    elif (a == '6'):
+        with open('fail_map.p','rb') as file:
+            try:
+                fail_map = pickle.load(file)
+            except EOFError:
+                print("EOF error 발생")
+        for j in range(1):  # 반복횟수
+            for i in range(len(fail_map)):
+                env.countRepeat(j+1, i+1)
+                trainMat(fail_map[i], env, model)
+                print("메모리 길이: ",len(qtrain_.experience.memory))
+        # qtrain_.experience.save()
+    elif (a == '7'):
+        with open('win_map.p','rb') as file:
+            try:
+                win_map = pickle.load(file)
+            except EOFError:
+                print("EOF error 발생")
+        for j in range(1):  # 반복횟수
+            for i in range(len(win_map)):
+                env.countRepeat(j+1, i+1)
+                trainMat(win_map[i], env, model)
+                print("메모리 길이: ",len(qtrain_.experience.memory))
+
 
     end_time = datetime.datetime.now()
     dt = end_time - start_time  # 시간 차이

@@ -15,6 +15,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="list.add" />
+          <option value="int.predict" />
         </list>
       </option>
     </inspection_tool>
