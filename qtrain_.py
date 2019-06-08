@@ -94,7 +94,7 @@ def qtrain(model, maze, **opt):
     # experience = experience_.Experience(model, max_memory=max_memory)
     # # Initialize experience replay object
     if experience_exist == 0:
-        experience = experience_.Experience(model, max_memory=192000)
+        experience = experience_.Experience(model, max_memory=300000)
         # experience.load()
         print("로드")
         experience_exist = 1
@@ -190,7 +190,7 @@ def qtrain(model, maze, **opt):
         dt = datetime.datetime.now() - start_time
         t = format_time(dt.total_seconds())  # 시간 계산
 
-        template = "Epoch: {:03d}/{:d} | Loss: {:.4f} | Episodes: {:d} | Win count: {:d} | Win rate: {:.3f} | time: {}"
+        template = "Epocwh: {:03d}/{:d} | Loss: {:.4f} | Episodes: {:d} | Win count: {:d} | Win rate: {:.3f} | time: {}"
         if total_reward > 5 and counter == 0:
             # raiseup = epoch
             counter += 1
