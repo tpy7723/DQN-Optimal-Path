@@ -29,7 +29,7 @@ actions_dict = {
 }
 
 # Exploration factor 탐험률 0.1
-epsilon = 0.2
+epsilon = 0.1
 
 # 액션의 수 (상하 좌우)  = 4
 num_actions = len(actions_dict)
@@ -69,7 +69,7 @@ def qtrain(model, maze, **opt):
     # print("답",maze)
     # env = maze_.Maze(maze)
     # env.reset()
-    epsilon = 0.2
+    epsilon = 0.1
     counter = 0
 
     n_epoch = opt.get('epochs', 15000)  # 15000 epoch 횟수
@@ -118,7 +118,7 @@ def qtrain(model, maze, **opt):
         envstate = qmaze.observe()  # 초기 상태 어레이를 한 줄로 표현
 
         n_episodes = 0  # 에피소드 초기화
-        start_this.env.changeMap(maze)  # 맵 초기화: 로봇 경유지
+        #start_this.env.changeMap(maze)  # 맵 초기화: 로봇 경유지
 
         while not game_over:  # 게임이 끝날 때 까지
 
@@ -146,7 +146,7 @@ def qtrain(model, maze, **opt):
             envstate, reward, game_status = qmaze.act(action)  # 액션을 취하고 리워드와 새 스테이트를 받는다
             total_reward += reward
             # time.sleep(3)
-            start_this.env.step(action) # 단계 변화
+            #start_this.env.step(action) # 단계 변화
 
             if game_status == 'win':  # 목적지에 도착했을 때
                 win_history.append(1)  # 히스토리에 1 추가
@@ -207,11 +207,11 @@ def qtrain(model, maze, **opt):
         if   win_rate >= 0.75:
             temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.50:
-            temp_epsilon = 0.7  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.3  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.25:
-            temp_epsilon = 0.1  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.7  # 성공률 90프로 일 때 입실론 값 대폭 감소
         elif win_rate >= 0.000:
-            temp_epsilon = 0.2  # 성공률 90프로 일 때 입실론 값 대폭 감소
+            temp_epsilon = 0.1  # 성공률 90프로 일 때 입실론 값 대폭 감소
 
         # if win_rate >= 0.875:
         #     temp_epsilon = 0.01  # 성공률 90프로 일 때 입실론 값 대폭 감소
@@ -338,19 +338,19 @@ def my_train():
     temp_model = build_model(maze_.total_maze)
     temp_model.load_weights("model.h5")
 
-    experience = experience_.Experience(temp_model, max_memory=192000)
+    experience = experience_.Experience(temp_model, max_memory=200000)
     experience.load()
 
-    inputs, targets = experience.get_data(data_size=32)  # 타겟은 예측값
+    
 
     for i in range(3000):
-
+        inputs, targets = experience.get_data(data_size=100000)  # 타겟은 예측값
         h = temp_model.fit(
             inputs,
             targets,
-            epochs=8,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
+            epochs=2,  # 학습 데이터 전체셋을 몇 번 학습하는지를 의미합니다. 동일한 학습 데이터라고 하더라도 여러 번 학습할 수록 학습 효과는 커집니다.
             # 하지만, 너무 많이 했을 경우 모델의 가중치가 학습 데이터에 지나치게 최적화되는 과적합(Overfitting) 현상이 발생합니다.
-            batch_size=16,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
+            batch_size=25000,  # 만약 batch_size가 10이라면, 총 10개의 데이터를 학습한 다음 가중치를 1번 갱신하게 됩니다.
             # batch_size 값이 크면 클수록 여러 데이터를 기억하고 있어야 하기에 메모리가 커야 합니다. 그대신 학습 시간이 빨라집니다.
             # batch_size 값이 작으면 학습은 꼼꼼하게 이루어질 수 있지만 학습 시간이 많이 걸립니다.
             verbose=0,  # Integer. 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
