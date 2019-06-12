@@ -9,7 +9,7 @@ import Qmaze_
 import maze_
 import qtrain_
 import time, datetime
-# import image_
+import image_
 
 maze = maze_.total_maze
 env = maze_.env
@@ -20,8 +20,9 @@ def play_game(model, qmaze, rat_cell):
     qmaze.reset(rat_cell)  # 입력 받은 위치로 로봇을 맵에 초기화함
     envstate = qmaze.observe()  # 현재 스테이트를 받아옴
 
-    mytime = 0.0
+    mytime = 0.3
     while True:
+
         env.render()
         time.sleep(mytime)
 
@@ -42,6 +43,7 @@ def play_game(model, qmaze, rat_cell):
 
         # apply action, get rewards and new state
         env.step(action)  # 액션 취함
+        # env.countUP(self.total_reward)
 
 
         envstate, reward, game_status = qmaze.act(action)
@@ -170,24 +172,28 @@ if __name__ == "__main__":
 
         win = 0
         lose = 0
-        for i in range(len(total_map)):
-            env.countRepeat(1,i+1)
-            if confirmResult(total_map[i], env, model): # image_.myMaze
-                win_map.append(total_map[i])
-                win += 1
-            else:
-                fail_map.append(total_map[i])
-                lose += 1
-                # trainMat(total_map[i], env, model)
-                # model.load_weights('model.h5')  # 트레인 데이터를 불러옴
-            # time.sleep(0.5)
+        while True:
+            for i in range(len(total_map)):
+                env.countUP(0)
 
-        with open('win_map.p','wb') as file:
-            pickle.dump(win_map, file)
+                env.countRepeat(1,i+1)
+                if confirmResult(total_map[i], env, model): # image_.myMaze
+                    # win_map.append(total_map[i])
+                    win += 1
+                else:
+                    # fail_map.append(total_map[i])
+                    lose += 1
+                time.sleep(1) # 1로 바꿔줌
+                    # trainMat(total_map[i], env, model)
+                    # model.load_weights('model.h5')  # 트레인 데이터를 불러옴
+                # time.sleep(0.5)
 
-        with open('fail_map.p','wb') as file:
-            pickle.dump(fail_map, file)
-        print("성공 갯수: %d, 실패 갯수: %d" % (win, lose))
+        # with open('win_map.p','wb') as file:
+        #     pickle.dump(win_map, file)
+        #
+        # with open('fail_map.p','wb') as file:
+        #     pickle.dump(fail_map, file)
+        # print("성공 갯수: %d, 실패 갯수: %d" % (win, lose))
 
     elif (a == '3'):
         # 0은 까만 벽 1은 하얀 벽 2는 경유지 3은 목적지 4는 로봇
@@ -217,14 +223,14 @@ if __name__ == "__main__":
         # ])
 
         total_maze = np.array([
-            [1., 1., 1., 1.],
-            [0., 0., 1., 1.],
+            [4., 1., 1., 1.],
+            [0., 0., 2., 1.],
             [1., 1., 1., 1.],
             [1., 1., 0., 0.],
             [1., 1., 1., 1.],
             [1., 1., 1., 1.]
         ])
-
+        print(type(total_maze))
         while True:
             confirmResult(total_maze, env, model)
     elif (a == '5'):
@@ -253,7 +259,13 @@ if __name__ == "__main__":
                 env.countRepeat(j+1, i+1)
                 trainMat(win_map[i], env, model)
                 print("메모리 길이: ",len(qtrain_.experience.memory))
-
+    elif (a == '8'):
+        model.load_weights('model.h5')  # 트레인 데이터를 불러옴
+        while True:
+            # image_.takeapicture()
+            temp = image_.takeapicture()
+            print(type(temp))
+            confirmResult(temp, env, model)
 
     end_time = datetime.datetime.now()
     dt = end_time - start_time  # 시간 차이

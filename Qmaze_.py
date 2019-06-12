@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+
 import numpy as np
 import maze_
 import start_this
@@ -119,6 +121,7 @@ class Qmaze(object):
                 increment_reward += 50
                 return increment_reward  # 6
             else:
+                time.sleep(0.5)
                 # print("경유지", self.waypoint)
                 self.waypoint.remove((rat_row, rat_col))
                 # print("경유지삭제후", self.waypoint)
@@ -138,8 +141,9 @@ class Qmaze(object):
         self.update_state(action)  # 액션을 수행하고 state를 업데이트함
         # print("변경 후 스테이트: ", self.state, " ", self.total_reward)
         reward = self.get_reward()  # 새로운 스테이트에 대한 리워드를 받음
-        self.total_reward += reward  # total_reward 에 방금 받은 리워드를 더함
         env.countUP(self.total_reward)
+        self.total_reward += reward  # total_reward 에 방금 받은 리워드를 더함
+
 
         status = self.game_status()  # win / lose / not_over
         envstate = self.observe()  # 새로 관측한 맵을 어레이를 한줄로 만듬 ( 로봇의 위치로 새로 반영됨)
